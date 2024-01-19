@@ -87,12 +87,10 @@ if alg_tree == "1":
     dtree = DecisionTreeClassifier()
     dtree = dtree.fit(X, y)
     '''ploting tree'''
-    tree.plot_tree(dtree, feature_names=features)
-    plt.figure(figsize=(15, 10))  # Adjust the figure size if needed
-    plot_tree(dtree, feature_names=features, filled=True)
-    plt.show()  # showing during the code is running
-    plt.savefig('decision_tree_plot.png')  # Saves the plot as a PNG file
-    sys.stdout.flush()
+    plt.figure(figsize=(15, 10))
+    plot_tree(dtree, feature_names=features, filled=True, rounded=True, class_names=['below_avg', 'above_avg'])
+    plt.savefig('pruned_decision_tree_plot.png')
+    plt.show()
 
     '''predict price using other parameters and trained data'''
     new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
@@ -124,7 +122,7 @@ elif alg_tree == "2":
     classifier.fit(X_test, y_test)
 
     '''predict price using other parameters and trained data'''
-    new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
+
     y_pred = classifier.predict(X_test)
     print(y_pred)
     result = confusion_matrix(y_test, y_pred)
@@ -135,7 +133,9 @@ elif alg_tree == "2":
     print(result1)
     result2 = accuracy_score(y_test, y_pred)
     print("Accuracy:", result2)
-
-
+    new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
+    y_pred = classifier.predict(new_data)
+    print(new_data)
+    print(y_pred)
 else:
     print("unknown command")
