@@ -4,6 +4,9 @@ import pandas as pd
 from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.model_selection import train_test_split
 
 # Load dataset into Pandas DataFrame
 df = pd.read_csv("laptops.csv")
@@ -92,12 +95,47 @@ if alg_tree == "1":
     sys.stdout.flush()
 
     '''predict price using other parameters and trained data'''
-    new_data = pd.DataFrame([[2, 1, 2, 1, 0]], columns=features)
+    new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
     predictions = dtree.predict(new_data)
     print(predictions)
 
-
+    # random forest
 elif alg_tree == "2":
     print("doing random forests")
+    time.sleep(1)  # to clarify output visualisation
+
+    '''Calling a functions for all columns'''
+    my_function(first_column, 'CompanyName')
+    my_function(second_column, 'Cpu')
+    my_function(third_column, 'Ram')
+    my_function(forth_column, 'Memory')
+    my_function(fifth_column, 'Gpu')
+    my_function(sixth_column, 'Price')
+
+    print(df)  # print dataset with numeric values
+    time.sleep(1)
+    features = ['CompanyName', 'Cpu', 'Ram', 'Memory', 'Gpu']
+
+    X = df[features]
+    y = df['Price']  # target column
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.30)
+
+    classifier = RandomForestClassifier(n_estimators=50)
+    classifier.fit(X_test, y_test)
+
+    '''predict price using other parameters and trained data'''
+    new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
+    y_pred = classifier.predict(X_test)
+    print(y_pred)
+    result = confusion_matrix(y_test, y_pred)
+    print("Confusion Matrix:")
+    print(result)
+    result1 = classification_report(y_test, y_pred)
+    print("Classification Report:", )
+    print(result1)
+    result2 = accuracy_score(y_test, y_pred)
+    print("Accuracy:", result2)
+
+
 else:
     print("unknown command")
