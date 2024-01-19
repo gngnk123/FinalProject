@@ -1,0 +1,32 @@
+
+# Laptop Price Prediction
+
+## Overview
+
+This project utilizes the "laptops.csv" dataset to implement and compare the performance of two machine learning algorithms:
+ Decision Tree and Random Forest. The dataset contains information about laptops, including various technical specifications
+ such as brand, CPU, GPU, and the corresponding price.
+
+## Dataset
+
+The "laptops.csv" file serves as our dataset, with each row representing a laptop and columns capturing specific technical
+requirements. The final column indicates the price of each laptop. The objective is to predict whether a laptop's price is
+below or above the average based on its technical specifications.
+
+## Preprocessing
+
+To facilitate the application of machine learning algorithms, several preprocessing steps have been undertaken. Firstly,
+ a function was implemented to calculate the average price using the provided data. Subsequently, all non-numeric values
+ in each column were transformed into numeric values, ensuring compatibility with the algorithms.
+
+## Algorithms
+
+Two algorithms, Decision Tree and Random Forest, have been employed for the price prediction task. These algorithms analyze
+the relationships between technical specifications and laptop prices, enabling the model to generalize and make predictions
+on unseen data.
+
+## Decision Tree Visualization
+
+As part of the analysis, the results of the Decision Tree algorithm are visualized through a plotted tree. This visualization
+aids in understanding the decision-making process of the model, showcasing how specific technical requirements influence the
+predicted price.

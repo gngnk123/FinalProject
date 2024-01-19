@@ -61,7 +61,8 @@ def my_function(n_column, changearg):  # n_column is list of provided column val
 
 print("Chose the algorithm you want to use for this dataset:"
       "\n 1 : decision trees"
-      "\n 2 : random forests")
+      "\n 2 : random forests"
+      "\n type 1 or 2 :")
 alg_tree = input()
 
 if alg_tree == "1":
