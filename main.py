@@ -1,6 +1,7 @@
 import sys
 import time
 import pandas as pd
+import numpy as np
 from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 import matplotlib.pyplot as plt
@@ -20,10 +21,6 @@ fifth_column = df.iloc[:, 4]
 sixth_column = df.iloc[:, 5]
 
 '''This function replaces the string value with an integer for the decision tree'''
-
-l = {}
-i1 = 0
-
 
 def Average(lst):
     return sum(lst) / len(lst)
@@ -84,19 +81,39 @@ if alg_tree == "1":
     X = df[features]
     y = df['Price']  # target column
 
-    '''Buildin Decision Tree'''
-    dtree = DecisionTreeClassifier()
+    '''plotting the tree'''
+    # Pre-pruning: Limit the depth of the decision tree
+    max_depth = 3
+    dtree = DecisionTreeClassifier(max_depth=max_depth)
     dtree = dtree.fit(X, y)
-    '''ploting tree'''
+
+    # Get probability estimates for each observation
+    probabilities = dtree.predict_proba(X)
+
+    # Set an ambiguity rejection threshold
+    ambiguity_threshold = 0.7
+
+    # Identify indices where the maximum probability is below the threshold
+    ambiguous_indices = [i for i, prob in enumerate(probabilities.max(axis=1)) if prob < ambiguity_threshold]
+
+    # Reject predictions for ambiguous instances
+    y_pred = dtree.predict_proba(X)
+    y_pred[ambiguous_indices] = None  # Use a special value (e.g., None) to indicate rejection
+
+    # Plotting the pruned tree
     plt.figure(figsize=(15, 10))
     plot_tree(dtree, feature_names=features, filled=True, rounded=True, class_names=['below_avg', 'above_avg'])
     plt.savefig('pruned_decision_tree_plot.png')
     plt.show()
+    # Display predictions with rejection
+    print("Predictions with Ambiguity Rejection:")
+    #  print(y_pred)
 
     '''predict price using other parameters and trained data'''
     new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
+    print(new_data)
     predictions = dtree.predict(new_data)
-    print(predictions)
+    print('Price {}'.format(predictions))
 
     # random forest
 elif alg_tree == "2":
@@ -135,8 +152,23 @@ elif alg_tree == "2":
     result2 = accuracy_score(y_test, y_pred)
     print("Accuracy:", result2)
     new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
-    y_pred = classifier.predict(new_data)
+
+
+    # Get probability estimates for each class
+    probabilities = classifier.predict_proba(new_data)
+
+    # Set an ambiguity rejection threshold (adjust as needed)
+    ambiguity_threshold = 0.7
+
+    # Identify indices where the maximum probability is below the threshold
+    ambiguous_indices = [i for i, prob in enumerate(probabilities.max(axis=1)) if prob < ambiguity_threshold]
+
+    # Reject predictions for ambiguous instances
+    y_pred_new = classifier.predict(new_data)
+    y_pred_new[ambiguous_indices] = -1  # Use a placeholder value to indicate rejection
+
+    print("\nNew Data:")
     print(new_data)
-    print(y_pred)
+    print('Price:', y_pred_new)
 else:
     print("unknown command")
