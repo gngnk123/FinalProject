@@ -22,6 +22,7 @@ sixth_column = df.iloc[:, 5]
 
 '''This function replaces the string value with an integer for the decision tree'''
 
+
 def Average(lst):
     return sum(lst) / len(lst)
 
@@ -54,6 +55,7 @@ def my_function(n_column, changearg):  # n_column is list of provided column val
 
     df[changearg] = df[changearg].map(l)  # Replace strings with numbers
     # print(l)
+    return l
 
 
 print("Chose the algorithm you want to use for this dataset:"
@@ -65,14 +67,14 @@ alg_tree = input()
 if alg_tree == "1":
     print("doing decision tree")
     time.sleep(1)  # to clarify output visualisation
-
+    start = time.time()
     '''Calling a functions for all columns'''
-    my_function(first_column, 'CompanyName')
-    my_function(second_column, 'Cpu')
-    my_function(third_column, 'Ram')
-    my_function(forth_column, 'Memory')
-    my_function(fifth_column, 'Gpu')
-    my_function(sixth_column, 'Price')
+    comp_name = my_function(first_column, 'CompanyName')
+    cpu = my_function(second_column, 'Cpu')
+    ram = my_function(third_column, 'Ram')
+    memory = my_function(forth_column, 'Memory')
+    gpu = my_function(fifth_column, 'Gpu')
+    price = my_function(sixth_column, 'Price')
 
     print(df)  # print dataset with numeric values
     time.sleep(1)
@@ -110,15 +112,35 @@ if alg_tree == "1":
     #  print(y_pred)
 
     '''predict price using other parameters and trained data'''
-    new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
+    pred_values=[1, 2, 2, 0, 0]
+    pred_str_values=[]
+    new_data = pd.DataFrame([pred_values], columns=features)
     print(new_data)
     predictions = dtree.predict(new_data)
     print('Price {}'.format(predictions))
-
+    end = time.time()
+    print('Elapsed time: ' + str(end - start))
+    for key, value in comp_name.items():
+        if pred_values[0] == value:
+            pred_str_values.append(key)
+    for key, value in cpu.items():
+        if pred_values[1] == value:
+            pred_str_values.append(key)
+    for key, value in ram.items():
+        if pred_values[2] == value:
+            pred_str_values.append(key)
+    for key, value in memory.items():
+        if pred_values[3] == value:
+            pred_str_values.append(key)
+    for key, value in gpu.items():
+        if pred_values[4] == value:
+            pred_str_values.append(key)
+    print(pred_str_values)
     # random forest
 elif alg_tree == "2":
     print("doing random forests")
     time.sleep(1)  # to clarify output visualisation
+    start = time.time()
 
     '''Calling a functions for all columns'''
     my_function(first_column, 'CompanyName')
@@ -153,7 +175,6 @@ elif alg_tree == "2":
     print("Accuracy:", result2)
     new_data = pd.DataFrame([[1, 2, 2, 0, 0]], columns=features)
 
-
     # Get probability estimates for each class
     probabilities = classifier.predict_proba(new_data)
 
@@ -170,5 +191,7 @@ elif alg_tree == "2":
     print("\nNew Data:")
     print(new_data)
     print('Price:', y_pred_new)
+    end = time.time()
+    print('Elapsed time: ' + str(end - start))
 else:
     print("unknown command")
